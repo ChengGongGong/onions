@@ -161,25 +161,26 @@ private Map<String,String> readData(String urlStr) {
         public static final String CONTENT_TYPE_GIF = "image/gif";
         public static final String CONTENT_TYPE_CSS = "text/css";
         public static final String CONTENT_TYPE_JS = "application/javascript";
-  }
+    }
   
-  public class MsgVO {
+    public class MsgVO {
 
-    private String accessKeyId ;
+        private String accessKeyId ;
     
-    private String accessKeySecret ;
+        private String accessKeySecret ;
     
-    private String endPoint ;
+        private String endPoint ;
     
-    private String region  ;
+        private String region  ;
 
-    private String bucketName;
+        private String bucketName;
     
-    private String key;
+        private String key;
 
-    private String downloadUrl;
+        private String downloadUrl;
 
-    private String cdnStatus;
+        private String cdnStatus;
 
-    private File file;
-}
+        private File file;
+        
+     }
