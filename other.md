@@ -134,7 +134,6 @@ private Map<String,String> readData(String urlStr) {
                                                    new AwsClientBuilder.EndpointConfiguration(
                                                            msgVO.getEndPoint(),
                                                            msgVO.getRegion())).build();
-        //put object to bucket
         log.info("Putting object to:{},key:{}", msgVO.getBucketName(),msgVO.getKey());
         long partSize = 4 * 1024 * 1024L;
         TransferManagerBuilder builder = TransferManagerBuilder.standard()
