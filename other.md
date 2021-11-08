@@ -72,7 +72,58 @@ private Map<String,String> readData(String urlStr) {
         return dest;
     }
 
-# 3. 上传文件到云存储
+        
+# 3.属性拷贝
+   
+ 主要包括以下几种类型：
+    
+    org.apache.commons.beanutils.PropertyUtils#copyProperties：
+    1.基本类型和包装类型会自动转换
+    2.方法名称相同，返回值类型和参数类型不同，复制失败，会报错
+    3.只支持类的修饰符 public，如果是default 则直接不会进行转换（注意内部类复制也要加public）
+    
+    org.apache.commons.beanutils.BeanUtils#_copyProperties：
+    1.基本类型和包装类型会自动转换
+    2.方法名称相同，返回值类型和参数类型不同，不复制，不报错
+    3.只支持类的修饰符 public，如果是default 则直接不会进行转换（注意内部类复制也要加public）
+    
+    org.springframework.beans.BeanUtils#copyProperties：
+    1.基本类型和包装类型会自动转换, 方法名称相同，返回值类型和参数类型不同，不进行复制，也不报错；
+    2.支持指定忽略某些属性不复制；
+    3.支持类的修饰符 default 、 public
+    
+   org.springframework.cglib.beans.BeanCopier#create:
+    支持两种方式，一种是不使用Converter的方式，仅对两个bean间属性名和类型完全相同的变量进行拷贝。另一种则引入Converter，可以对某些特定属性值进行特殊操作
+    例如：
+    
+    @Slf4j
+    public class BeanUtil {
+
+        private static final Map<String, BeanCopier> COPIER_MAP = new ConcurrentHashMap<>(16);
+
+        public static <T, V> V copyFrom(T src, Class<V> target){
+            StringBuilder sb = new StringBuilder();
+            sb.append(src.getClass().getName()).append("-").append(target.getName());
+            BeanCopier beanCopier;
+
+            if (!COPIER_MAP.containsKey(sb.toString())) {
+                beanCopier = BeanCopier.create(src.getClass(), target, false);
+                COPIER_MAP.put(sb.toString(), beanCopier);
+            }
+            beanCopier = COPIER_MAP.get(sb.toString());
+            V result;
+
+            try {
+                result = target.getDeclaredConstructor().newInstance();
+                beanCopier.copy(src, result, null);
+                return result;
+            } catch (Exception e) {
+                log.error("Bean copy fail error", e);
+                return null;
+            }
+        }
+    }
+# 4. 上传文件到云存储
 
 ## 1.引入aws相关pom
 
